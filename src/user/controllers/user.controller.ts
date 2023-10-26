@@ -1,9 +1,10 @@
-import {Body, Controller, Get, Param, Post, Query} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query} from "@nestjs/common";
 import {UserCreateInputDto} from "../dtos/user-create-input.dto";
 import {UserService} from "../services/user.service";
 import {UserOutputDto} from "../dtos/user-output.dto";
 import {BaseApiResponseDto} from "../../shared/dtos/base-api-response.dto";
 import {PaginationParamsDto} from "../../shared/dtos/pagination-params.dto";
+import {UserUpdateInputDto} from "../dtos/user-update-input.dto";
 
 
 @Controller({
@@ -25,10 +26,10 @@ export class UserController {
     }
 
     @Post()
+    @HttpCode(201)
     async createUser(
-        @Body() input: UserCreateInputDto
+        @Body() input: UserCreateInputDto,
     ): Promise<BaseApiResponseDto<UserOutputDto>> {
-        console.log(input)
         const user = await this.userService.createUser(input);
         return {'data': user, 'meta': {}};
     }
@@ -39,5 +40,22 @@ export class UserController {
     ): Promise<BaseApiResponseDto<UserOutputDto>> {
         const user = await this.userService.getUserById(id);
         return {data: user, meta: {}};
+    }
+
+    @Patch(':id')
+    async updateUser(
+        @Param('id') id: number,
+        @Body() input: UserUpdateInputDto,
+    ): Promise<BaseApiResponseDto<UserOutputDto>> {
+        const user = await this.userService.updateUser(id, input);
+        return {data: user, meta: {}};
+    }
+
+    @Delete(':id')
+    @HttpCode(204)
+    async deleteUser(
+        @Param('id') id: number
+    ): Promise<void> {
+        return this.userService.deleteUserById(id);
     }
 }

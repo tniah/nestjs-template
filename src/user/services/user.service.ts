@@ -5,7 +5,7 @@ import {UserRepository} from "../repositories/user.repository";
 import {plainToClass} from "class-transformer";
 import {User} from "../entities/user.entity";
 import {hash} from "bcrypt";
-import {of} from "rxjs";
+import {UserUpdateInputDto} from "../dtos/user-update-input.dto";
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
     async getUsers(
         limit: number,
         offset: number,
-    ): Promise<{users: UserOutputDto[], count: number}> {
+    ): Promise<{ users: UserOutputDto[], count: number }> {
         const [users, count] = await this.repository.findAndCount({
             where: {},
             take: limit,
@@ -58,5 +58,33 @@ export class UserService {
         return plainToClass(UserOutputDto, user, {
             excludeExtraneousValues: true,
         })
+    }
+
+    async updateUser(id: number, input: UserUpdateInputDto): Promise<UserOutputDto> {
+        const user = await this.repository.getById(id);
+        if (!user) {
+            throw new NotFoundException('No user found with this ID')
+        }
+
+        if (input.password) {
+            input.password = await hash(input.password, 10);
+        }
+
+        const updatedUser: User = {
+            ...user,
+            ...plainToClass(User, input),
+        };
+        await this.repository.save(updatedUser);
+
+        return plainToClass(UserOutputDto, updatedUser, {
+            excludeExtraneousValues: true,
+        });
+    }
+
+    async deleteUserById(id: number): Promise<void> {
+        const user = await this.repository.getById(id);
+        if (user) {
+            await this.repository.remove(user);
+        }
     }
 }
