@@ -60,7 +60,7 @@ export class UserService {
         })
     }
 
-    async updateUser(id: number, input: UserUpdateInputDto): Promise<UserOutputDto> {
+    async updateUserById(id: number, input: UserUpdateInputDto): Promise<UserOutputDto> {
         const user = await this.repository.getById(id);
         if (!user) {
             throw new NotFoundException('No user found with this ID')

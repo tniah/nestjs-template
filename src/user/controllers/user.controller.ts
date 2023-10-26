@@ -47,7 +47,7 @@ export class UserController {
         @Param('id') id: number,
         @Body() input: UserUpdateInputDto,
     ): Promise<BaseApiResponseDto<UserOutputDto>> {
-        const user = await this.userService.updateUser(id, input);
+        const user = await this.userService.updateUserById(id, input);
         return {data: user, meta: {}};
     }
 
