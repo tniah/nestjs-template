@@ -1,8 +1,9 @@
-import {Body, Controller, Get, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post, Query} from "@nestjs/common";
 import {UserCreateInputDto} from "../dtos/user-create-input.dto";
 import {UserService} from "../services/user.service";
 import {UserOutputDto} from "../dtos/user-output.dto";
 import {BaseApiResponseDto} from "../../shared/dtos/base-api-response.dto";
+import {PaginationParamsDto} from "../../shared/dtos/pagination-params.dto";
 
 
 @Controller({
@@ -16,8 +17,10 @@ export class UserController {
     }
 
     @Get()
-    async getUsers(): Promise<BaseApiResponseDto<UserOutputDto[]>> {
-        const {users, count} = await this.userService.getUsers(10, 0);
+    async getUsers(
+        @Query() query: PaginationParamsDto,
+    ): Promise<BaseApiResponseDto<UserOutputDto[]>> {
+        const {users, count} = await this.userService.getUsers(query.limit, query.offset);
         return {data: users, meta: {count}};
     }
 
