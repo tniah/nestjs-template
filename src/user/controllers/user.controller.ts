@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post} from "@nestjs/common";
 import {UserCreateInputDto} from "../dtos/user-create-input.dto";
 import {UserService} from "../services/user.service";
 import {UserOutputDto} from "../dtos/user-output.dto";
@@ -15,10 +15,11 @@ export class UserController {
     ) {
     }
 
-    // @Get()
-    // async getUsers() {
-    //     return "This action return all user"
-    // }
+    @Get()
+    async getUsers(): Promise<BaseApiResponseDto<UserOutputDto[]>> {
+        const {users, count} = await this.userService.getUsers(10, 0);
+        return {data: users, meta: {count}};
+    }
 
     @Post()
     async createUser(
@@ -29,11 +30,11 @@ export class UserController {
         return {'data': user, 'meta': {}};
     }
 
-    // @Get(':id')
-    // async getUser(
-    //     @Param('id') id: number
-    // ): Promise<UserOutputDto> {
-    //     const user = await this.userService.getUserById(id);
-    //     return user;
-    // }
+    @Get(':id')
+    async getUser(
+        @Param('id') id: number
+    ): Promise<BaseApiResponseDto<UserOutputDto>> {
+        const user = await this.userService.getUserById(id);
+        return {data: user, meta: {}};
+    }
 }
