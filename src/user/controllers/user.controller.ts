@@ -1,5 +1,6 @@
 import {Body, Controller, Get, Post} from "@nestjs/common";
 import {UserCreateInputDto} from "../dtos/user-create-input.dto";
+import {UserService} from "../services/user.service";
 
 
 @Controller({
@@ -7,6 +8,11 @@ import {UserCreateInputDto} from "../dtos/user-create-input.dto";
     version: ['1']
 })
 export class UserController {
+    constructor(
+        private readonly userService: UserService
+    ) {
+    }
+
     @Get()
     async getUsers() {
         return "This action return all user"
@@ -14,7 +20,7 @@ export class UserController {
 
     @Post()
     async createUser(@Body() input: UserCreateInputDto) {
-        console.log(input)
+        await this.userService.create(input);
         return 'This action adds a new user'
     }
 
