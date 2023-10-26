@@ -2,7 +2,10 @@ import {Body, Controller, Get, Post} from "@nestjs/common";
 import {UserCreateInputDto} from "../dtos/user-create-input.dto";
 
 
-@Controller('users')
+@Controller({
+    path: 'users',
+    version: ['1']
+})
 export class UserController {
     @Get()
     async getUsers() {
