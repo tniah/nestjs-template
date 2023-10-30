@@ -18,6 +18,7 @@ export class UserController {
     }
 
     @Get()
+    @HttpCode(200)
     async getUsers(
         @Query() query: PaginationParamsDto,
     ): Promise<BaseApiResponseDto<UserOutputDto[]>> {
