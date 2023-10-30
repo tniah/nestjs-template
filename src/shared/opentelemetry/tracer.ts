@@ -1,12 +1,15 @@
 import {NodeSDK} from '@opentelemetry/sdk-node';
-import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
-
+import {getNodeAutoInstrumentations} from '@opentelemetry/auto-instrumentations-node';
+import {OTLPTraceExporter} from '@opentelemetry/exporter-trace-otlp-grpc';
+import {PeriodicExportingMetricReader} from "@opentelemetry/sdk-metrics";
+import {OTLPMetricExporter} from "@opentelemetry/exporter-metrics-otlp-grpc"
 
 const otelSDK = new NodeSDK({
-    metricReader: new PrometheusExporter({
-        port: process.env.METRIC_PORT ? parseInt(process.env.METRIC_PORT, 10) : 8081,
+    metricReader: new PeriodicExportingMetricReader({
+        exporter: new OTLPMetricExporter({
+            url: process.env.OTLP_METRIC_EXPORTER_ENDPOINT || 'http://127.0.0.1:4317',
+        }),
+        exportIntervalMillis: 1000,
     }),
     traceExporter: new OTLPTraceExporter({
         url: process.env.OTLP_TRACE_EXPORTER_ENDPOINT || 'http://127.0.0.1:4317',
@@ -20,7 +23,7 @@ const otelSDK = new NodeSDK({
             },
         })
     ],
-    serviceName: 'nestjs'
+    serviceName: process.env.SERVICE_NAME || 'nestjs'
 });
 
 export default otelSDK;
