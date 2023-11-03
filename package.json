@@ -31,6 +31,7 @@
     "@opentelemetry/api": "^1.6.0",
     "@opentelemetry/auto-instrumentations-node": "^0.39.4",
     "@opentelemetry/exporter-metrics-otlp-grpc": "^0.44.0",
+    "@opentelemetry/exporter-prometheus": "^0.44.0",
     "@opentelemetry/sdk-metrics": "^1.17.1",
     "@opentelemetry/sdk-node": "^0.44.0",
     "bcrypt": "^5.1.1",

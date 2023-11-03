@@ -3,16 +3,21 @@ import {getNodeAutoInstrumentations} from '@opentelemetry/auto-instrumentations-
 import {OTLPTraceExporter} from '@opentelemetry/exporter-trace-otlp-grpc';
 import {PeriodicExportingMetricReader} from "@opentelemetry/sdk-metrics";
 import {OTLPMetricExporter} from "@opentelemetry/exporter-metrics-otlp-grpc"
+// import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
+
 
 const otelSDK = new NodeSDK({
     metricReader: new PeriodicExportingMetricReader({
         exporter: new OTLPMetricExporter({
-            url: process.env.OTLP_METRIC_EXPORTER_ENDPOINT || 'http://127.0.0.1:4317',
+            url: process.env.OTLP_EXPORTER_OTLP_ENDPOINT || 'http://127.0.0.1:4317',
         }),
         exportIntervalMillis: 1000,
     }),
+    // metricReader: new PrometheusExporter({
+    //    port: 8081
+    // }),
     traceExporter: new OTLPTraceExporter({
-        url: process.env.OTLP_TRACE_EXPORTER_ENDPOINT || 'http://127.0.0.1:4317',
+        url: process.env.OTLP_EXPORTER_OTLP_ENDPOINT || 'http://127.0.0.1:4317',
         headers: {},
     }),
     instrumentations: [
