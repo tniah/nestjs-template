@@ -25,4 +25,6 @@ COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
 
 ENTRYPOINT ["/usr/local/bin/npm", "run"]
 
+EXPOSE 3000
+
 CMD ["start:prod"]
