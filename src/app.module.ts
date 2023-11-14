@@ -5,12 +5,10 @@ import {UserModule} from "./user/user.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import databaseConfig from "./shared/configs/database.config";
-import {OpenTelemetryModuleConfig} from "./shared/opentelemetry/tracer.module";
 
 
 @Module({
     imports: [
-        OpenTelemetryModuleConfig,
         ConfigModule.forRoot({
             isGlobal: true,
             load: [databaseConfig]
